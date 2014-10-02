@@ -11,7 +11,7 @@ const (
 )
 
 func main() {
-	h, err := InitNewrelicAgent(NEW_RELIC_LICENSE, "missmagi", true)
+	err := InitNewrelicAgent(NEW_RELIC_LICENSE, "missmagi", true)
 	if err != nil {
 		panic(err)
 	}
@@ -23,13 +23,11 @@ func main() {
 	r.Static("/assets", "assets")
 
 	r.GET("/", func(c *gin.Context) {
-		c.Redirect(301, "/einvoice")
+		c.HTML(200, "body", nil)
 	})
 
-	r.GET("/einvoice", func(c *gin.Context) {
-		obj := gin.H{"PageTitle": "E-invoice"}
-		c.HTML(200, "einvoice", obj)
-	})
+	r.GET("/einvoice", HandlerEinvoiceGet)
+	r.POST("/einvoice", HandlerEinvoicePost)
 
 	// Listen and server on 0.0.0.0:8080
 	port := "80"
@@ -37,6 +35,6 @@ func main() {
 		port = os.Getenv("PORT")
 	}
 
-	r.Use(h)
+	r.Use(HandlerNewRelic)
 	r.Run(":" + port)
 }

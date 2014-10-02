@@ -11,16 +11,16 @@ import (
 
 var agent *gorelic.Agent
 
-func handler(c *gin.Context) {
+func HandlerNewRelic(c *gin.Context) {
 	startTime := time.Now()
 	c.Next()
 	agent.HTTPTimer.UpdateSince(startTime)
 }
 
-func InitNewrelicAgent(license string, appname string, verbose bool) (func(*gin.Context), error) {
+func InitNewrelicAgent(license string, appname string, verbose bool) error {
 
 	if license == "" {
-		return nil, fmt.Errorf("Please specify NewRelic license")
+		return fmt.Errorf("Please specify NewRelic license")
 	}
 
 	agent = gorelic.NewAgent()
@@ -33,5 +33,5 @@ func InitNewrelicAgent(license string, appname string, verbose bool) (func(*gin.
 	agent.NewrelicName = appname
 	agent.Run()
 
-	return handler, nil
+	return nil
 }
