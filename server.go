@@ -6,7 +6,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const (
+	NEW_RELIC_LICENSE = ""
+)
+
 func main() {
+	h, err := InitNewrelicAgent(NEW_RELIC_LICENSE, "missmagi", true)
+	if err != nil {
+		panic(err)
+	}
+
 	gin.SetMode("release")
 
 	r := gin.Default()
@@ -27,5 +36,7 @@ func main() {
 	if os.Getenv("PORT") != "" {
 		port = os.Getenv("PORT")
 	}
+
+	r.Use(h)
 	r.Run(":" + port)
 }
