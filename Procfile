@@ -1,1 +1,1 @@
-web: missmagi -port=$PORT
+web: missmagi
